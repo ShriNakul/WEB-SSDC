@@ -2,32 +2,27 @@
 
 > **Tinder for your messy folders.** Clean up clutter in seconds by swiping through your files.
 
-[![Try Web App](https://img.shields.io/badge/Try-Web%20Version-22c55e?style=for-the-badge)](https://yourwebsite.com/app)
-[![Download Desktop](https://img.shields.io/badge/Download-Windows-2563eb?style=for-the-badge)]((https://github.com/ShriNakul/SSDC/releases/tag/v1.1.2))
+[![Try Web App](https://img.shields.io/badge/Try-Web%20Version-22c55e?style=for-the-badge)](https://shrinakul.github.io/WEB-SSDC/)
+[![Download Desktop](https://img.shields.io/badge/Download-Windows-2563eb?style=for-the-badge)](https://github.com/ShriNakul/SSDC/releases/tag/v1.1.2)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/ShriNakul/SSDC)
 
 ---
 
 # ⚡ Clean Files Faster
 
-Most people have folders full of:
+Downloads. Desktop. Screenshots. Random media.
 
-- 📸 Random screenshots
-- 📂 Old downloads
-- 🎥 Duplicate videos
-- 🎵 Audio recordings
-- 💻 Leftover code files
-- 📄 Documents they forgot about
+Everyone has folders filled with files they don't need anymore, but cleaning them manually is slow and frustrating.
 
-Sorting them one by one in File Explorer is slow.
-
-**File Cleanser** gives you a fast visual interface where you make one decision at a time.
+**File Cleanser** turns the process into a fast, visual experience where you make one decision at a time.
 
 🛡️ **Keep** → Move to the next file
 
-🗑️ **Delete** → Send it to the Virtual Trash Bin
+🗑️ **Delete** → Send it safely to the **Virtual Trash Bin**
 
-No digging through folders. No right-click menus. Just quick decisions.
+No endless right-clicking.
+No hunting through folders.
+Just rapid decisions.
 
 ---
 
@@ -35,7 +30,7 @@ No digging through folders. No right-click menus. Just quick decisions.
 
 ### 🖼️ Instant File Preview
 
-Preview your files before deciding.
+Preview files before deciding.
 
 Supports:
 
@@ -50,19 +45,19 @@ Supports:
 - Markdown
 - HTML
 - CSS
-- And more...
+- And many more...
 
 ---
 
 ### 🗑️ Virtual Trash Bin
 
-Deleted files aren't immediately erased.
+Nothing is permanently deleted immediately.
 
-Instead they're safely moved into a Virtual Trash Bin where you can:
+Deleted files are moved into a Virtual Trash Bin where you can:
 
 - Restore files
 - Permanently delete them
-- Empty everything at once
+- Empty the trash whenever you're ready
 
 ---
 
@@ -72,66 +67,64 @@ Everything runs locally.
 
 Your files never leave your computer.
 
+No cloud.
 No uploads.
-
-No cloud storage.
-
 No tracking.
 
 ---
 
-### ⚡ Fast Workflow
+### ⚡ Lightning Fast
 
-Navigate with simple controls.
+Designed for quickly sorting hundreds—or even thousands—of files.
 
-- ⬅️ Keep
-- ➡️ Delete
+Keyboard shortcuts:
 
-Designed for cleaning thousands of files without slowing down.
+- ⬅️ **Keep**
+- ➡️ **Delete**
+
+Stay in the flow without touching your mouse.
 
 ---
 
-# 🌐 Use File Cleanser
+# 🚀 Get Started
 
-## 🚀 Try the Web Version
+## 🌐 Try the Web Version
 
-No installation required.
+Experience File Cleanser instantly in your browser.
 
 Perfect for testing the interface before downloading.
 
-👉 **Launch Web App**
-
-// add app
+👉 **https://shrinakul.github.io/WEB-SSDC/app**
 
 ---
 
-## 💻 Download the Desktop App
+## 💻 Download for Windows
 
-Get the full experience with local file access and Virtual Trash Bin support.
+Get the full desktop experience with local file access and the Virtual Trash Bin.
 
-Available for Windows.
+👉 **https://github.com/ShriNakul/SSDC/releases/tag/v1.1.2**
 
-👉 **Download Now**
-
-https://github.com/ShriNakul/SSDC/releases/tag/v1.1.2
+---
 
 # ❤️ Why File Cleanser?
 
-Traditional file managers make deleting hundreds of files painful.
+Traditional file explorers weren't built for rapidly sorting thousands of files.
 
-File Cleanser turns it into a fast, visual experience that helps you clean folders in minutes instead of hours.
+File Cleanser gives you a simple workflow:
 
-Whether it's your:
+Preview → Decide → Next
 
-- Downloads
-- Desktop
-- Screenshots
-- Photos
-- Videos
-- Programming projects
+Whether you're cleaning your:
 
-you can rapidly work through every file with almost no effort.
+- 📂 Downloads
+- 🖥️ Desktop
+- 📸 Screenshots
+- 🎥 Videos
+- 🎵 Audio
+- 💻 Programming Projects
+- 📄 Documents
 
+you can organize everything in minutes instead of hours.
 
 # 📄 License
 
