@@ -3,7 +3,7 @@
 > **Tinder for your messy folders.** Clean up clutter in seconds by swiping through your files.
 
 [![Try Web App](https://img.shields.io/badge/Try-Web%20Version-22c55e?style=for-the-badge)](https://yourwebsite.com/app)
-[![Download Desktop](https://img.shields.io/badge/Download-Windows-2563eb?style=for-the-badge)]([https://yourwebsite.com/download](https://github.com/ShriNakul/SSDC/releases/tag/v1.1.2))
+[![Download Desktop](https://img.shields.io/badge/Download-Windows-2563eb?style=for-the-badge)]((https://github.com/ShriNakul/SSDC/releases/tag/v1.1.2))
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/ShriNakul/SSDC)
 
 ---
