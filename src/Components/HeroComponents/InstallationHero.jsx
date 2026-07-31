@@ -82,7 +82,7 @@ function InstallationHero() {
 
           <h2 className={styles.heroDescription}>
             {isPortComing
-              ? "Port coming in version 1.3, sorry."
+              ? "Port coming in a later version, sorry."
               : "Ready to clean your drive?"}
           </h2>
 
