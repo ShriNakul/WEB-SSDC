@@ -1,167 +1,232 @@
 // src/app/env/BrowserFileBackend.jsx
-import React, { useState, useCallback, Suspense, lazy } from "react";
+
+import React, { useState, Suspense, lazy } from "react";
 import FileCleanser from "../ui/FileCleanser";
 
-// Lazy load the new Deleted Section UI
 const DeletedSection = lazy(() => import("../ui/DeletedSection"));
 
 function BrowserFileBackend() {
   const [directoryHandle, setDirectoryHandle] = useState(null);
+
   const [scannedFiles, setScannedFiles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const [currentFileContent, setCurrentFileContent] = useState(null);
 
-  // Requirement 2: Virtual Trash State
   const [deletedList, setDeletedList] = useState([]);
   const [showDeletedSection, setShowDeletedSection] = useState(false);
 
-  // Directory Scanning: derived MIME updated to 'typeHint'
+  // -----------------------------
+  // Folder selection + scanning
+  // -----------------------------
+
   const handleSelectFolder = async () => {
     try {
-      const handle = await window.showDirectoryPicker({ mode: "readwrite" });
+      const handle = await window.showDirectoryPicker({
+        mode: "readwrite",
+      });
+
       setDirectoryHandle(handle);
 
       const files = [];
+
       const recursiveScan = async (currentHandle, path = "") => {
         for await (const entry of currentHandle.values()) {
           const entryPath = path ? `${path}/${entry.name}` : entry.name;
 
-          if (entry.kind === "file") {
-            const fileData = await entry.getFile();
-
-            let typeHint = "other";
-            if (fileData.type.startsWith("image/")) typeHint = "image";
-            else if (fileData.type.startsWith("video/")) typeHint = "video";
-            else if (fileData.type.startsWith("audio/")) typeHint = "audio";
-            else if (
-              fileData.type.includes("javascript") ||
-              fileData.name.match(/\.(js|css|html|json|md|txt|jsx|tsx)$/)
-            )
-              typeHint = "code";
-
-            files.push({
-              name: entry.name,
-              relativePath: entryPath, // Important for hard delete later
-              typeHint: typeHint,
-              mimeType: fileData.type,
-              lastModified: fileData.lastModified,
-              fileHandle: entry, // Standard logic: keep handle
-              url: ["image", "video", "audio"].includes(typeHint)
-                ? URL.createObjectURL(fileData)
-                : null,
-            });
+          if (entry.kind === "directory") {
+            await recursiveScan(entry, entryPath);
+            continue;
           }
+
+          const fileData = await entry.getFile();
+
+          let typeHint = "other";
+
+          if (fileData.type.startsWith("image/")) {
+            typeHint = "image";
+          } else if (fileData.type.startsWith("video/")) {
+            typeHint = "video";
+          } else if (fileData.type.startsWith("audio/")) {
+            typeHint = "audio";
+          } else if (
+            fileData.type.includes("javascript") ||
+            /\.(js|jsx|ts|tsx|css|html|json|md|txt)$/i.test(fileData.name)
+          ) {
+            typeHint = "code";
+          }
+
+          files.push({
+            name: entry.name,
+
+            relativePath: entryPath,
+
+            typeHint,
+
+            mimeType: fileData.type,
+
+            lastModified: fileData.lastModified,
+
+            fileHandle: entry,
+
+            url: ["image", "video", "audio"].includes(typeHint)
+              ? URL.createObjectURL(fileData)
+              : null,
+          });
         }
       };
 
       await recursiveScan(handle);
+
       setScannedFiles(files);
       setCurrentIndex(0);
+
       loadFileContent(files[0]);
     } catch (err) {
-      console.error("[SSDC] Web Folder picker aborted.", err);
+      console.error("[SSDC] Folder selection cancelled", err);
     }
   };
 
-  const loadFileContent = async (fileObject) => {
-    if (fileObject && fileObject.typeHint === "code") {
-      const fileData = await fileObject.fileHandle.getFile();
-      const content = await fileData.text();
-      setCurrentFileContent(content);
+  // -----------------------------
+  // File preview
+  // -----------------------------
+
+  const loadFileContent = async (file) => {
+    if (file && file.typeHint === "code") {
+      const data = await file.fileHandle.getFile();
+
+      const text = await data.text();
+
+      setCurrentFileContent(text);
     } else {
       setCurrentFileContent(null);
     }
   };
 
+  // -----------------------------
+  // Navigation
+  // -----------------------------
+
+  const nextFile = () => {
+    const next = currentIndex + 1;
+
+    setCurrentIndex(next);
+
+    loadFileContent(scannedFiles[next]);
+  };
+
   const handleKeep = () => {
-    const nextIndex = currentIndex + 1;
-    setCurrentIndex(nextIndex);
-    loadFileContent(scannedFiles[nextIndex]);
+    nextFile();
   };
 
-  // --- Requirement 2: REVISED Delete (Moves to Virtual Trash) ---
+  // -----------------------------
+  // Virtual trash
+  // -----------------------------
+
   const handleVirtualTrash = () => {
-    if (scannedFiles.length === 0) return;
+    const file = scannedFiles[currentIndex];
 
-    const fileToTrash = scannedFiles[currentIndex];
-    console.log(
-      `[SSDC] Moving ${fileToTrash.name} to Virtual Trash (Not Deleted from OS)`,
-    );
+    if (!file) return;
 
-    // Add to Deleted List State
-    setDeletedList((prev) => [...prev, fileToTrash]);
+    setDeletedList((prev) => [...prev, file]);
 
-    // Remove from Scanned List State
-    setScannedFiles((prev) => prev.filter((_, i) => i !== currentIndex));
+    const remaining = scannedFiles.filter((_, i) => i !== currentIndex);
 
-    // Handle view indexing immediately
-    // loadFileContent will naturally fail gracefully or load the *new* item at currentIndex
-  };
+    setScannedFiles(remaining);
 
-  // --- Requirement 2: Dynamic Restoration Action ---
-  const handleRestoreFromTrash = (trashIndex) => {
-    const itemToRestore = deletedList[trashIndex];
-    console.log(`[SSDC] Restoring ${itemToRestore.name} to Active Scan List`);
-
-    // Remove from Deleted List
-    setDeletedList((prev) => prev.filter((_, i) => i !== trashIndex));
-
-    // Restore to Scanned List (append to end)
-    setScannedFiles((prev) => [...prev, itemToRestore]);
-  };
-
-  // --- Requirement 2: Dynamic HARD PERMANENT DELETE Action ---
-  const handlePermanentWebDelete = async (trashIndex) => {
-    if (!directoryHandle) return;
-
-    const itemToHardDelete = deletedList[trashIndex];
-    console.log(
-      `[SSDC] Attempting Web Hard Delete (Real removeEntry): ${itemToHardDelete.relativePath}`,
-    );
-
-    try {
-      // Modern Web API: Hard hard deletion required here.
-      // Assumes flat scanning/deletion handled as per v1 example limitation
-      if (!itemToHardDelete.relativePath.includes("/")) {
-        await directoryHandle.removeEntry(itemToHardDelete.name);
-        console.log("[SSDC] Permanent Web Deletion successful.");
-
-        // Remove from Deleted List State
-        setDeletedList((prev) => prev.filter((_, i) => i !== trashIndex));
-      } else {
-        alert(
-          "Deletion inside subfolders not supported in current flat scan example backend.",
-        );
-      }
-    } catch (err) {
-      console.error("[SSDC] Web Permanent Deletion failed.", err);
-      alert("Hard deletion operation failed. Permission lost or file locked.");
+    if (currentIndex >= remaining.length) {
+      setCurrentIndex(Math.max(0, remaining.length - 1));
     }
   };
 
-  // Environment State derivation
-  const isFirstTime = !directoryHandle || scannedFiles.length === 0;
-  const currentFileEntry = scannedFiles[currentIndex] || null;
+  // -----------------------------
+  // Restore
+  // -----------------------------
 
-  // Render main dumb component with revised logical handler
+  const handleRestoreFromTrash = (index) => {
+    const file = deletedList[index];
+
+    setDeletedList((prev) => prev.filter((_, i) => i !== index));
+
+    setScannedFiles((prev) => [...prev, file]);
+  };
+
+  // -----------------------------
+  // Real filesystem delete helper
+  // -----------------------------
+
+  const deleteFile = async (root, relativePath) => {
+    const parts = relativePath.split("/");
+
+    let current = root;
+
+    while (parts.length > 1) {
+      const folder = parts.shift();
+
+      current = await current.getDirectoryHandle(folder);
+    }
+
+    await current.removeEntry(parts[0]);
+  };
+
+  // -----------------------------
+  // Permanent delete
+  // -----------------------------
+
+  const handlePermanentWebDelete = async (index) => {
+    const file = deletedList[index];
+
+    try {
+      await deleteFile(directoryHandle, file.relativePath);
+
+      setDeletedList((prev) => prev.filter((_, i) => i !== index));
+    } catch (err) {
+      console.error("Delete failed", err);
+
+      alert("Unable to delete file");
+    }
+  };
+
+  // -----------------------------
+  // Empty trash
+  // -----------------------------
+
+  const handleEmptyTrash = async () => {
+    for (const file of deletedList) {
+      try {
+        await deleteFile(directoryHandle, file.relativePath);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    setDeletedList([]);
+  };
+
+  const currentFile = scannedFiles[currentIndex] || null;
+
+  const isFirstTime = !directoryHandle || scannedFiles.length === 0;
+
   return (
     <>
       <FileCleanser
         isFirstTime={isFirstTime}
-        file={currentFileEntry}
+        file={currentFile}
         onSelectFolder={handleSelectFolder}
         onKeep={handleKeep}
-        onDelete={handleVirtualTrash} // Revise Handler
-        version="1.1-WebFileSystemAccess"
+        onDelete={handleVirtualTrash}
+        deletedList={deletedList}
+        openTrash={() => setShowDeletedSection(true)}
+        version="1.2-WebFS"
       />
 
-      {/* Conditional Rendering of Trash Bin UI */}
       {showDeletedSection && (
-        <Suspense fallback={<div>Loading Bin...</div>}>
+        <Suspense fallback={<div>Loading Trash...</div>}>
           <DeletedSection
             deletedList={deletedList}
             onRestoreItem={handleRestoreFromTrash}
             onPermanentDeleteItem={handlePermanentWebDelete}
+            onEmptyTrash={handleEmptyTrash}
             onClose={() => setShowDeletedSection(false)}
           />
         </Suspense>
