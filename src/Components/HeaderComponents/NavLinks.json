@@ -1,0 +1,5 @@
+[
+  { "name": "Home", "to": "/" },
+  { "name": "Installation", "to": "/installation" },
+  { "name": "Web Version", "to": "/app" }
+]
