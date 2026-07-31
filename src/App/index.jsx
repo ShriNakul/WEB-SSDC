@@ -4,7 +4,6 @@ import { isDesktopApp } from "./env/electron-bridge";
 
 // Lazy load the backends based on context for better performance
 const BrowserFileBackend = lazy(() => import("./env/BrowserFileBackend"));
-const ElectronFileBackend = lazy(() => import("./env/ElectronFileBackend"));
 
 /**
  * Smart Container Detector

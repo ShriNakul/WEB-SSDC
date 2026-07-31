@@ -1,5 +1,8 @@
 [
-  { "name": "Home", "to": "/" },
-  { "name": "Installation", "to": "/installation" },
-  { "name": "Web Version", "to": "/app" }
+  { "name": "Home", "to": "https://shrinakul.github.io/WEB-SSDC/" },
+  {
+    "name": "Installation",
+    "to": "https://shrinakul.github.io/WEB-SSDC/installation"
+  },
+  { "name": "Web Version", "to": "https://shrinakul.github.io/WEB-SSDC/app" }
 ]
