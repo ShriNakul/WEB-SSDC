@@ -1,8 +1,8 @@
 [
-  { "name": "Home", "to": "https://shrinakul.github.io/WEB-SSDC/" },
+  { "name": "Home", "to": "/WEB-SSDC/" },
   {
     "name": "Installation",
-    "to": "https://shrinakul.github.io/WEB-SSDC/installation"
+    "to": "/WEB-SSDC/installation"
   },
-  { "name": "Web Version", "to": "https://shrinakul.github.io/WEB-SSDC/app" }
+  { "name": "Web Version", "to": "/WEB-SSDC/app" }
 ]

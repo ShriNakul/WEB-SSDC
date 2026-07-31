@@ -16,10 +16,10 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/installation" element={<Installation />} />
-        <Route path="/donate" element={<Donate />} />
-        <Route path="/app/*" element={<FileCleanserApp />} />
+        <Route path="/WEB-SSDC/" element={<Home />} />
+        <Route path="/WEB-SSDC/installation" element={<Installation />} />
+        <Route path="/WEB-SSDC/donate" element={<Donate />} />
+        <Route path="/WEB-SSDC/app/*" element={<FileCleanserApp />} />
       </Routes>
     </div>
   );
