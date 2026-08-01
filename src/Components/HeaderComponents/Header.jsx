@@ -8,7 +8,7 @@ function Header({ title = "SSDC" }) {
     <div className={styles.headerContainer}>
       <header className={styles.headerContent}>
         {/* Animated Logo */}
-        <a href="/" className={styles.logoLink}>
+        <a href="https://shrinakul.github.io/WEB-SSDC/" className={styles.logoLink}>
           <span className={styles.logoTitle}>{title}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
